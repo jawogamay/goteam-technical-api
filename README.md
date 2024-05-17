@@ -6,6 +6,9 @@ Make sure to install the dependencies:
 # composer
 composer install
 
+#env
+create .env file and copy .env.examp
+
 # migration
 php artisan migrate
 
