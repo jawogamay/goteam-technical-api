@@ -38,6 +38,43 @@ class TaskService extends EloquentService {
      }
 
      /**
+      * @param int $id
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    public function update($id, array $data): bool
+    {
+        try {
+            return DB::transaction(function () use ($data, $id) {
+                $this->find($id);
+                return parent::update($id, $data);
+            });
+        } catch (Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function delete($id): bool 
+    {
+        try {
+            DB::beginTransaction();
+            //delete associated task
+            $task = $this->repository->setModel($this->model())->delete($id);
+            DB::commit();
+            return $task;
+        } catch (Exception $exception) {
+            DB::rollback();
+            throw $exception;
+        }
+    }
+
+     /**
       * @param user_id
       * @return Collection|null
       */
@@ -54,5 +91,5 @@ class TaskService extends EloquentService {
             throw $exception;
         }
      }
- 
+    
 }

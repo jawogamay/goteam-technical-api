@@ -30,5 +30,5 @@ class UserService extends EloquentService {
              throw $exception;
          }
      }
- 
+     
 }

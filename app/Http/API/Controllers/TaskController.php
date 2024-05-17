@@ -2,8 +2,9 @@
 
 namespace App\Http\API\Controllers;
 
-use App\Http\API\Requests\TaskStoreFormRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Task\TaskStoreFormRequest;
+use App\Http\Requests\Task\TaskUpdateFormRequest;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
@@ -40,9 +41,31 @@ class TaskController extends Controller
      * @throws \Exception
      */
     public function store(TaskStoreFormRequest $request)
-    {
-        $tasks = $this->service->create($request->all());
+    {   
+        $tasks = $this->service->create($request->validated());
         return $this->jsonResponse($tasks, 'Task created successfully');
     }
 
+        /**
+     * Update the specified resource in storage.
+     *
+     * @param ItemUpdateFormRequest $request
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(TaskUpdateFormRequest $request, $id)
+    {
+        $this->service->update($id, $request->validated());
+        $item = $this->service->find($id);
+
+        return $this->jsonResponse($item , 'Item updated successfully');
+    }
+
+
+    /**
+     * Delete the task
+     */
+    public function destroy($id) {
+        return $this->service->delete($id);
+    }
 }

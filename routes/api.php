@@ -2,6 +2,7 @@
 
 use App\Http\API\Controllers\AuthController;
 use App\Http\API\Controllers\TaskController;
+use App\Http\API\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,9 @@ Route::controller(AuthController::class)->group(function() {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::controller(TaskController::class)->group(function() {
-        Route::get('/task', 'index');
-    });
+    Route::apiResources([
+        'tasks' => TaskController::class
+    ]);
+    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [UserController::class, 'me']);
 });
